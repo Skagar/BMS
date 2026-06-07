@@ -36,7 +36,7 @@ public class BookingService {
         List<ShowSeat> selectedSeats=showSeatRepository.findAllById(bookingRequest.getSeatIds());
         for(ShowSeat seat:selectedSeats)
         {
-            if("!Available".equalsIgnoreCase(seat.getStatus()))
+            if(!"Available".equalsIgnoreCase(seat.getStatus()))
             {
                 throw new SeatUnavailableException("Seat"+seat.getSeat().getSeatNumber()+"is not Available");
             }
@@ -77,13 +77,13 @@ public class BookingService {
     return mapToBookingDto(booking,seats);
     }
 
-    private BookingDto getBookingByNumber(String bookingNumber)
+    public BookingDto getBookingByNumber(String bookingNumber)
     {
         Booking booking=bookingRepository.findByBookingNumber(bookingNumber).orElseThrow(()->new ResourceNotFoundException("Booking Not Found"));
         List<ShowSeat>seats=showSeatRepository.findAll().stream().filter(seat->seat.getBooking()!=null && seat.getBooking().getId().equals(booking.getId())).collect(Collectors.toList());
         return mapToBookingDto(booking,seats);
     }
-    private List<BookingDto> getBookingByUserId(Long userId)
+    public List<BookingDto> getBookingByUserId(Long userId)
     {
         List<Booking> bookings=bookingRepository.findByUserId(userId);
         return bookings.stream().map(booking -> {
@@ -94,7 +94,7 @@ public class BookingService {
         })
                 .collect(Collectors.toList());
     }
-    private BookingDto cancelBooking(Long id)
+    public BookingDto cancelBooking(Long id)
     {
         Booking booking=bookingRepository.findById(id)
                 .orElseThrow(()->new ResourceNotFoundException("Booking Not Found"));
@@ -119,7 +119,7 @@ public class BookingService {
         bookingDto.setId(booking.getId());
         bookingDto.setBookingNumber(booking.getBookingNumber());
         bookingDto.setBookingTime(booking.getBookingTime());
-        bookingDto.setStatus(bookingDto.getStatus());
+        bookingDto.setStatus(booking.getStatus());
         bookingDto.setTotalAmount(booking.getTotalAmount());
 
         UserDto userDto=new UserDto();

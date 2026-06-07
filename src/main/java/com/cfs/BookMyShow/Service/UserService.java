@@ -14,7 +14,8 @@ import java.util.stream.Collectors;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-    private UserDto createuser(UserDto userDto)
+
+    public UserDto createuser(UserDto userDto)
     {
         User user=mapToEntity(userDto);
         User savedUser=userRepository.save(user);
