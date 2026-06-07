@@ -107,6 +107,25 @@ public class ShowService {
                 .collect(Collectors.toList());
     }
 
+    public ShowDto updateShow(Long id,ShowDto showDto)
+    {
+        Show show=showRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Show Not found with id ="+id));
+        Movie movie=movieRepository.findById(showDto.getMovie().getId()).orElseThrow(()->new ResourceNotFoundException("Movie Not Found"));
+        Screen screen=screenRepository.findById(showDto.getScreen().getId()).orElseThrow(()->new ResourceNotFoundException("Screen Not Found"));
+        show.setStartTime(showDto.getStartTime());
+        show.setEndTime(showDto.getEndTime());
+        show.setScreen(screen);
+        show.setMovie(movie);
+      Show updatedShow=showRepository.save(show);
+      List<ShowSeat> availableSeats=showSeatRepository.findByShowIdAndStatus(updatedShow.getId(),"Available");
+      return maptoDto(updatedShow,availableSeats);
+
+    }
+    public void deleteShow(Long id)
+    {
+        Show show=showRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Show Not found with id ="+id));
+        showRepository.delete(show);
+    }
     private ShowDto maptoDto(Show show,List<ShowSeat>availableSeats)
     {
         ShowDto showDto=new ShowDto();

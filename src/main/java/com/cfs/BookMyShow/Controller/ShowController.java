@@ -57,4 +57,16 @@ public class ShowController {
         return ResponseEntity.ok(showService.getShowsDateRange(start,end));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ShowDto> updateShow(@PathVariable Long id,@Valid @RequestBody ShowDto showDto)
+    {
+        return ResponseEntity.ok(showService.updateShow(id,showDto));
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteShow(@PathVariable Long id)
+    {
+        showService.deleteShow(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

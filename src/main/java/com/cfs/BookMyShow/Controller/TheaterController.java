@@ -41,4 +41,17 @@ public class TheaterController {
     {
         return new ResponseEntity<>(theaterService.createTheater(theaterDto), HttpStatus.CREATED);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TheaterDto> updateTheater(@PathVariable Long id, @RequestBody TheaterDto theaterDto)
+    {
+        return ResponseEntity.ok(theaterService.updateTheater(id,theaterDto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTheater(@PathVariable Long id)
+    {
+        theaterService.deleteTheater(id);
+        return ResponseEntity.noContent().build();
+    }
 }

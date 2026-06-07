@@ -4,6 +4,7 @@ import com.cfs.BookMyShow.Exception.ResourceNotFoundException;
 import com.cfs.BookMyShow.Model.Theater;
 import com.cfs.BookMyShow.dto.TheaterDto;
 import com.cfs.BookMyShow.repository.TheaterRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,23 @@ public class TheaterService {
         Theater theater=mapToEntity(theaterDto);
         Theater savedTheater=theaterRepository.save(theater);
         return mapToDto(savedTheater);
+    }
+
+    public TheaterDto updateTheater(Long id,TheaterDto theaterDto)
+    {
+        Theater theater=theaterRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Theater Not found with id ="+id));
+        theater.setName(theaterDto.getName());
+        theater.setCity(theaterDto.getCity());
+        theater.setAddress(theaterDto.getAddress());
+        theater.setTotalScreen(theaterDto.getTotalScreens());
+        Theater updateTheater=theaterRepository.save(theater);
+        return mapToDto(updateTheater);
+    }
+
+    public void deleteTheater(Long id)
+    {
+        Theater theater=theaterRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Theater Not found with id ="+id));
+        theaterRepository.delete(theater);
     }
 
     public TheaterDto getTheaterById(Long id)

@@ -35,13 +35,26 @@ public class UserService {
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
     }
-
+    public UserDto updateUser(Long id , UserDto userDto)
+    {
+        User user =userRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("User Not Found with id "+id));
+        user.setPhoneNumber(userDto.getPhoneNumber());
+        user.setName(userDto.getName());
+        user.setEmail(userDto.getEmail());
+        User updatedUser= userRepository.save(user);
+        return mapToDto(updatedUser);
+    }
+    public void deleteUser(Long id)
+    {
+        User user =userRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("User Not Found with id "+id));
+        userRepository.delete(user);
+    }
     private User mapToEntity(UserDto userDto)
     {
         User user=new User();
         user.setEmail(userDto.getEmail());
         user.setName(userDto.getName());
-        user.setPhoneNumber(user.getPhoneNumber());
+        user.setPhoneNumber(userDto.getPhoneNumber());
         return  user;
     }
     private UserDto mapToDto(User user)
@@ -49,8 +62,8 @@ public class UserService {
         UserDto userDto=new UserDto();
         userDto.setId(user.getId());
         userDto.setName(user.getName());
-        userDto.setEmail(userDto.getEmail());
-        user.setPhoneNumber(userDto.getPhoneNumber());
+        userDto.setEmail(user.getEmail());
+        userDto.setPhoneNumber(user.getPhoneNumber());
         return userDto;
     }
 }
