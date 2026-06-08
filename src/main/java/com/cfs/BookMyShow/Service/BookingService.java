@@ -34,6 +34,22 @@ public class BookingService {
         User user=userRepository.findById(bookingRequest.getUserId()).orElseThrow(()-> new ResourceNotFoundException(("User Not found")));
         Show show=showRepository.findById(bookingRequest.getShowId()).orElseThrow(()-> new ResourceNotFoundException(("Show Not found")));
         List<ShowSeat> selectedSeats=showSeatRepository.findAllById(bookingRequest.getSeatIds());
+        if(selectedSeats.size() != bookingRequest.getSeatIds().size())
+        {
+            throw new ResourceNotFoundException(
+                    "One or more seats not found"
+            );
+        }
+
+        for(ShowSeat seat : selectedSeats)
+        {
+            if(!seat.getShow().getId().equals(show.getId()))
+            {
+                throw new SeatUnavailableException(
+                        "Seat does not belong to selected show"
+                );
+            }
+        }
         for(ShowSeat seat:selectedSeats)
         {
             if(!"Available".equalsIgnoreCase(seat.getStatus()))
@@ -73,7 +89,7 @@ public class BookingService {
     {
         Booking booking=bookingRepository.findById(id).orElseThrow(
                 ()->new ResourceNotFoundException("Booking not found"));
-     List<ShowSeat>seats=showSeatRepository.findAll().stream().filter(seat->seat.getBooking()!=null && seat.getBooking().getId().equals(booking.getId())).collect(Collectors.toList());
+     List<ShowSeat>seats=showSeatRepository.findByBookingId(id);
     return mapToBookingDto(booking,seats);
     }
 

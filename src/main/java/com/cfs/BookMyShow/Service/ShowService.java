@@ -1,15 +1,9 @@
 package com.cfs.BookMyShow.Service;
 
 import com.cfs.BookMyShow.Exception.ResourceNotFoundException;
-import com.cfs.BookMyShow.Model.Movie;
-import com.cfs.BookMyShow.Model.Screen;
-import com.cfs.BookMyShow.Model.Show;
-import com.cfs.BookMyShow.Model.ShowSeat;
+import com.cfs.BookMyShow.Model.*;
 import com.cfs.BookMyShow.dto.*;
-import com.cfs.BookMyShow.repository.MovieRepository;
-import com.cfs.BookMyShow.repository.ScreenRepository;
-import com.cfs.BookMyShow.repository.ShowRepository;
-import com.cfs.BookMyShow.repository.ShowSeatRepository;
+import com.cfs.BookMyShow.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +24,10 @@ public class ShowService {
 
     @Autowired
     private ShowSeatRepository showSeatRepository;
+
+    @Autowired
+    private SeatRepository seatRepository;
+
     public ShowDto createShow(ShowDto showDto)
     {
         Show show=new Show();
@@ -40,7 +38,16 @@ public class ShowService {
         show.setStartTime(showDto.getStartTime());
         show.setEndTime(showDto.getEndTime());
         Show savedshow=showRepository.save(show);
-
+        List<Seat> seats=seatRepository.findByScreenId(screen.getId());
+        List<ShowSeat>showSeats=seats.stream().map(seat -> {
+            ShowSeat showSeat=new ShowSeat();
+            showSeat.setShow(savedshow);
+            showSeat.setSeat(seat);
+            showSeat.setStatus("Available");
+            showSeat.setPrice(seat.getBasePrice());
+            return showSeat;
+        }).collect(Collectors.toList());
+        showSeatRepository.saveAll(showSeats);
         List<ShowSeat> availableseats=
                 showSeatRepository.findByShowIdAndStatus(savedshow.getId(),"Available");
         return maptoDto(savedshow,availableseats);

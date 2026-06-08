@@ -41,6 +41,7 @@ public class UserService {
         user.setPhoneNumber(userDto.getPhoneNumber());
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
+        user.setPassword(userDto.getPassword());
         User updatedUser= userRepository.save(user);
         return mapToDto(updatedUser);
     }
@@ -55,6 +56,7 @@ public class UserService {
         user.setEmail(userDto.getEmail());
         user.setName(userDto.getName());
         user.setPhoneNumber(userDto.getPhoneNumber());
+        user.setPassword(userDto.getPassword());
         return  user;
     }
     private UserDto mapToDto(User user)
@@ -64,6 +66,7 @@ public class UserService {
         userDto.setName(user.getName());
         userDto.setEmail(user.getEmail());
         userDto.setPhoneNumber(user.getPhoneNumber());
+        userDto.setPassword(user.getPassword());
         return userDto;
     }
 }
