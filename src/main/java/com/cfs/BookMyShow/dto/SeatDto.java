@@ -12,5 +12,5 @@ public class SeatDto {
     private String seatNumber;
     private String seatType;
     private  Double basePrice;
-
+    private ScreenDto screenDto;
 }
