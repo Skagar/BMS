@@ -20,7 +20,7 @@ A Spring Boot based backend application that simulates the core workflow of a mo
 
 ## Tech Stack
 
-Java 17 • Spring Boot • Spring Data JPA • Hibernate • MySQL • Maven • Lombok • REST APIs
+Java 21 • Spring Boot • Spring Data JPA • Hibernate • MySQL • Maven • Lombok • REST APIs
 
 ## Project Structure
 
